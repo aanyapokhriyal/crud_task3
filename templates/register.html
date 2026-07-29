@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Register User</title>
+</head>
+
+<body>
+    <h1>Register User</h1>
+
+    <form action="/register" method="post">
+        <label for="user_name">Name:</label>
+        <input type="name" id="uname" name="user_name" required><br><br>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required><br><br>
+        <span id="dob-error" style="display:none; color:red;"></span><br>
+
+        <label for="course">Course:</label>
+        <select id="course" name="course" required>
+            <option value="">Select course </option>
+            <option value="Btech">Btech</option>
+            <option value="BBA">BBA</option>
+            <option value="Bsc">Bsc</option>
+        </select><br><br>
+
+        <label for="phone">Enter a phone number:</label>
+        <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" title="Phone number must be exactly 10 digits"
+            required><br><br>
+
+        <button type="submit" class="btn" id="submitBtn">Register</button>
+        {% if "read" in permissions %}
+        <a href="/users"><button type="button" class="btn viewbtn">View All Users</button></a>
+        <button type="button" class="btn viewbtn" onclick="toggleSearch()">View one User</button>
+        {% endif %}
+
+        {% if message %}
+        <p class="{{ message_type }}">{{ message }}</p>
+        {% endif %}
+
+    </form>
+
+
+    <div id="searchBarDiv" style="display:none;">
+        <h3>Search User by ID</h3>
+        <form action="/user" method="post">
+            <input type="int" name="id" placeholder="Enter User ID" required>
+            <br><br><button type="submit" class="btn viewbtn">Search</button>
+        </form>
+    </div>
+
+    <div>
+        <br><br><a href="/logout">Logout</a>
+        <br><br><a href="/dashboard">Dashboard</a>
+    </div>
+
+
+    <script>
+        function toggleSearch() {
+            const box = document.getElementById("searchBarDiv");
+
+            if (box.style.display === "none") {
+                box.style.display = "block";
+            }
+            else {
+                box.style.display = "none";
+            }
+        }
+        function isValidDob(dobString) {
+            const dob = new Date(dobString);
+            const today = new Date();
+
+            if (dob.getFullYear() < 1926) {
+                return false;
+            }
+            if (dob > today) {
+                return false;
+            }
+
+            let age = today.getFullYear() - dob.getFullYear();
+
+            const birthdayNotYetOccurred =
+                (today.getMonth() < dob.getMonth()) ||
+                (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate());
+
+            if (birthdayNotYetOccurred) {age--;}
+
+            if (age < 12) {
+                return false;
+            }
+
+            return true;
+        }
+
+        const dobInput = document.getElementById("dob"); // match your actual input's id
+        const errorMessage = document.getElementById("dob-error"); // a span/div you add near the field
+        const submitBtn = document.getElementById("submitBtn");
+
+        dobInput.addEventListener("change", function () {
+            if (!isValidDob(dobInput.value)) {
+                errorMessage.textContent = "You must be at least 12 years old.";
+                errorMessage.style.display = "block";
+                submitBtn.disabled = true;
+            } else {
+                errorMessage.textContent = "";
+                errorMessage.style.display = "none";
+                submitBtn.disabled = false;
+            }
+        });
+
+
+
+    </script>
+
+</body>
+
+</html>
