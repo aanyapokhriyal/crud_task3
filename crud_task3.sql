@@ -21,3 +21,5 @@ CREATE TABLE user_details (
 );
 select * from  user_details;
 select * from  user_accounts;
+UPDATE user_accounts SET role = 'admin'  WHERE email = 'admin@gm.com';
+UPDATE user_accounts SET role = 'superadmin'  WHERE email = 'superadmin@gm.com';

@@ -1,4 +1,3 @@
-import uuid,requests
 #from config import (IEX_API_URL,IEX_API_KEY)
 import mysql_connection
 #from mysql_connection import get_connection
